@@ -3,6 +3,8 @@ package com.luke.sc.security.config;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -10,10 +12,13 @@ import javax.annotation.Resource;
 @Component
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Resource
+    AccessDeniedHandler accessDeniedHandler  ;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .csrf().disable()
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/fonts/**").permitAll()  // 允许访问资源
                 .antMatchers("/", "/home", "/about").permitAll() //允许访问这三个路由
@@ -26,18 +31,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll() ;
-//                .and()
-//                .exceptionHandling()
-//                .accessDeniedHandler(accessDeniedHandler);           //自定义异常处理
+                .permitAll()
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler);           //自定义异常处理
     }
 
 
     @Resource
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("user").password("user").roles("USER")
+                .passwordEncoder(new BCryptPasswordEncoder())
+                .withUser("user").password(new BCryptPasswordEncoder().encode("user")).roles("USER")
                 .and()
-                .withUser("admin").password("admin").roles("ADMIN");
+                .withUser("admin").password(new BCryptPasswordEncoder().encode("admin")).roles("ADMIN");
     }
 }
