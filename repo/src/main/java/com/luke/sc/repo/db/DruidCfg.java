@@ -6,13 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-@Component
-public class DruidCfg {
+ @Component
+ @ConfigurationProperties("app.datasource.durid")
+public class DruidCfg extends  DataSourceProperties {
 
-    @Bean
-    @Primary
-    @ConfigurationProperties("app.datasource.druid")
-    public DataSourceProperties dataSourceProperties() {
-        return new DataSourceProperties();
-    }
 }
