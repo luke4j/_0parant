@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @EnableConfigurationProperties
@@ -18,7 +19,8 @@ public class App {
 
     public static void main(String[] args) {
         logger.info("==============security 2 start ====================");
-        SpringApplication.run(App.class,args) ;
+        ConfigurableApplicationContext context = SpringApplication.run(App.class,args) ;
+        context.getBean("dataSourceProperties") ;
         logger.info("==============security 2 end ====================");
 
 
